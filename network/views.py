@@ -8,7 +8,11 @@ from .models import User, Post
 
 
 def index(request):
-    return render(request, "network/index.html")
+    active_posts = Post.objects.filter(is_active=True).order_by('-timestamp')
+
+    return render(request, "network/index.html", {
+        "active_posts":active_posts
+    })
 
 
 def login_view(request):
@@ -75,7 +79,7 @@ def new_post(request):
                 user=request.user,
                 poster=request.user, 
                 body=post_made
-                )   
+                )
             post.save()
             return HttpResponseRedirect(reverse("index"))
         # If post está vacío devuelvo error
@@ -84,3 +88,8 @@ def new_post(request):
         })
     else:
         return render(request, "network/new_post.html")
+    
+def profile(request, poster ):
+    #TODO
+    pass
+    

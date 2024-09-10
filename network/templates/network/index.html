@@ -1,5 +1,18 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    {% if active_posts %}
+        {% for post in active_posts %}
+            <p>
+                Post made by: <a href="{% url 'profile' %}">{{ post.poster }}</a>
+                <hr>
+                {{ post.body }}
+                <hr>
+                {{ post.timestamp }}
+                {{ post.likes }}
+            </p>
+        {% endfor %}
+    {% else %}
+            <h3>No active posts.</h3>
+    {% endif %}
 {% endblock %}

@@ -3,7 +3,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    followers = models.IntegerField(default=0)
+    following = models.IntegerField(default=0)
 
 class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user")
@@ -11,6 +12,7 @@ class Post(models.Model):
     body = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
 
     def serialize(self):
         return {

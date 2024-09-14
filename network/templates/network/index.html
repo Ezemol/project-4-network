@@ -4,7 +4,7 @@
     {% if active_posts %}
         {% for post in active_posts %}
             <p>
-                Post made by: <a href="{% url 'profile' {{post.user.id}} %}">{{ post.user }}</a>
+                Post made by: <a href="{% url 'profile' post.user  %}">{{ post.user }}</a>
                 <hr>
                 {{ post.body }}
                 <hr>

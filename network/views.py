@@ -92,16 +92,23 @@ def profile(request, username):
     # Get user en la base de datos
     user = get_object_or_404(User, username=username)
     # Buscar el perfil del usuario
-    profile = user.profile
+    profile, created = Profile.objects.get_or_create(user=user)
 
     # Get todos los posts del dueño de perfil
     posts = Post.objects.filter(user=user).order_by("-timestamp")
 
-    # Inicio variable que indica que no esta siguiendo al usuario.
+    # Inicio variables
     is_following = False
+    is_profile = False
+    num_followers = profile.followers.count()
+    num_following = user.following.count()
+
+    # If es el perfil del user no muestra el seguir
+    if request.user == user.user:
+        is_profile = True 
 
     # Verifico si el usuario está siguiendo al dueño del perfil
-    if request.user.is_authenticated and request.user != user.user:
+    if request.user.is_authenticated and is_profile != True:
         is_following = request.user in profile.followers.all()
         
     return render(request, "network/profile.html", {
@@ -109,6 +116,9 @@ def profile(request, username):
             "profile": profile,
             "posts": posts,
             "is_following": is_following,
+            "num_followers": num_followers,
+            "num_following": num_following,
+            "is_profile": is_profile,
         })
 
     

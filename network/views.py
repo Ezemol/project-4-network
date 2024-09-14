@@ -1,10 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from .models import User, Post
+from .models import User, Post, Profile
 
 
 def index(request):
@@ -77,7 +77,6 @@ def new_post(request):
             # Guardar datos del nuevo post
             post = Post(
                 user=request.user,
-                poster=request.user, 
                 body=post_made
                 )
             post.save()
@@ -89,7 +88,27 @@ def new_post(request):
     else:
         return render(request, "network/new_post.html")
     
-def profile(request, poster ):
-    #TODO
-    pass
+def profile(request, username):
+    # Get user en la base de datos
+    user = get_object_or_404(User, username=username)
+    # Buscar el perfil del usuario
+    profile = user.profile
+
+    # Get todos los posts del dueño de perfil
+    posts = Post.objects.filter(user=user).order_by("-timestamp")
+
+    # Inicio variable que indica que no esta siguiendo al usuario.
+    is_following = False
+
+    # Verifico si el usuario está siguiendo al dueño del perfil
+    if request.user.is_authenticated and request.user != user.user:
+        is_following = request.user in profile.followers.all()
+        
+    return render(request, "network/profile.html", {
+            "profile_user": user,
+            "profile": profile,
+            "posts": posts,
+            "is_following": is_following,
+        })
+
     

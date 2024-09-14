@@ -3,15 +3,13 @@ from django.db import models
 
 
 class User(AbstractUser):
-    followers = models.IntegerField(default=0)
-    following = models.IntegerField(default=0)
+    pass
 
 class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user")
-    poster = models.ForeignKey("User", on_delete=models.PROTECT, related_name="poster")
     body = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
     is_active = models.BooleanField(default=True)
 
     def serialize(self):
@@ -24,9 +22,21 @@ class Post(models.Model):
         }
 
     def like(self):
-        self.likes += 1
-        self.save()
+        self.likes.add(self.user)
 
     def dislike(self):
-        self.likes -= 1
-        self.save()
+        self.likes.remove(self.user)
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    followers = models.ManyToManyField(User, related_name="following", blank=True)
+
+    def __str__(self):
+        return f"Profile of {self.user.username}"
+
+    def serialize(self):
+        return {
+            "user": self.user.username,
+            "followers_count": self.followers.count(),
+            "following_count": self.user.following.count(),
+        }

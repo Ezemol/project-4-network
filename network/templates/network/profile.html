@@ -2,6 +2,43 @@
 {% load static %}
 
 {% block body %}
-    <div id="profile-view">
+    <div id="profile-view"  data-is-following="{{ is_following|yesno:'true,false' }}">
+        <h1>{{ profile.user }}</h1>
+
+        {% if posts %}
+        <div>
+            <p>Followers: {{ num_followers }}</p>
+            <p>Following {{ num_following }} </p>
+
+            {% for post in posts %}
+                <p>
+                    <hr>
+                    {{ post.timestamp }}
+                    <hr>
+                    <p>Post made by: {{ post.user }}</p>
+                    <p>{{ post.body }}</p>
+                    <p>
+                        {% if post.likes %}
+                            Likes: {{ post.likes }}
+                        {% else %}
+                            Likes: 0
+                        {% endif %}
+                    </p>
+                </p>
+            {% endfor %}
+        </div> 
+        <div>
+        {% else %}
+                <h3>No active posts.</h3>
+        {% endif %}
+        
+        {% if is_profile != True %}
+            <div id="follow-div"></div>
+        {% endif %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <!-- Importar el script para la funcionalidad de la bandeja de entrada -->
+     <script src="{% static 'network/profile.js' %}"></script>
 {% endblock %}

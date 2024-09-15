@@ -2,35 +2,6 @@
 {% load static %}
 
 {% block body %}
-    <h1>{{ profile_user.username }}</h1>
-    
-    <div>
-        <p>Followers: {{ num_followers }}</p>
-        <p>Following {{ num_following }} </p>
-    </div>
-    <div>
-        {% for post in posts %}
-            <p>
-                <hr>
-                {{ post.timestamp }}
-                <hr>
-                <p>Post made by: {{ profile_user.username }}</p>
-                <p>{{ post.body }}</p>
-
-                <p>
-                    {% if post.likes %}
-                        Likes: {{ post.likes }}
-                    {% else %}
-                        Likes: 0
-                    {% endif %}
-                </p>
-            </p>
-
-        {% endfor %}
-    </div> 
-    <div>
-        {% if is_profile == False %}
-        <button id="follow"></button>
-        {% endif %}
+    <div id="profile-view">
     </div>
 {% endblock %}

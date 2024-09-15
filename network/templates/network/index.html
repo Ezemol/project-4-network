@@ -2,16 +2,26 @@
 
 {% block body %}
     {% if active_posts %}
-        {% for post in active_posts %}
-            <p>
-                Post made by: <a href="{% url 'profile' post.user  %}">{{ post.user }}</a>
-                <hr>
-                {{ post.body }}
-                <hr>
-                {{ post.timestamp }}
-                {{ post.likes }}
-            </p>
-        {% endfor %}
+        <div>
+            {% for post in active_posts %}
+                <p>
+                    <hr>
+                    {{ post.timestamp }}
+                    <hr>
+                    <p>Post made by: <a href="{% url 'profile' post.user  %}">{{ post.user }}</a></p>
+                    <p>{{ post.body }}</p>
+    
+                    <p>
+                        {% if post.likes %}
+                            Likes: {{ post.likes }}
+                        {% else %}
+                            Likes: 0
+                        {% endif %}
+                    </p>
+                </p>
+            {% endfor %}
+        </div> 
+        <div>
     {% else %}
             <h3>No active posts.</h3>
     {% endif %}

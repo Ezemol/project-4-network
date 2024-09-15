@@ -9,7 +9,7 @@ class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user")
     body = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
+    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True, default=0)
     is_active = models.BooleanField(default=True)
 
     def serialize(self):

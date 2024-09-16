@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Obtener el valor de 'is_following' desde el atributo data-is-following
     const profileView = document.querySelector('#profile-view');
     const isFollowing = profileView.getAttribute('data-is-following') === 'true';
+    const userId = profileView.getAttribute('data-user-id');
 
     // Generar el botón de follow/unfollow
     document.querySelector('#follow-div').innerHTML = `
@@ -13,11 +14,40 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#button-follow').addEventListener('click', () => {
         const action = isFollowing ? "unfollow" : "follow";
         console.log(action);
-        // Aquí puedes hacer la petición al servidor para seguir/dejar de seguir al usuario
-        // Ejemplo de lógica que puedes implementar:
-        // fetch(`/follow/${profileId}`, {
-        //     method: 'POST',
-        //     body: JSON.stringify({ action: action })
-        // });
+
+        follow(userId, isFollowing);
     });
+
+    function follow(profileId) {
+        fetch(`/follow/${profileId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')                
+            },
+            body: JSON.stringify({
+                isFollowing: isFollowing
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+        });
+    }
+
+    // Funcion para obtener csrf token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 });

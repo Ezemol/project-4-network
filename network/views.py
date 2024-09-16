@@ -104,11 +104,11 @@ def profile(request, username):
     num_following = user.following.count()
 
     # If es el perfil del user no muestra el seguir
-    if request.user == user.user:
+    if request.user == user:
         is_profile = True 
 
     # Verifico si el usuario está siguiendo al dueño del perfil
-    if request.user.is_authenticated and is_profile != True:
+    if request.user.is_authenticated and not is_profile:
         is_following = request.user in profile.followers.all()
         
     return render(request, "network/profile.html", {
@@ -122,3 +122,7 @@ def profile(request, username):
         })
 
     
+# Funcion para follow/unfollow usuarios
+def follow_user(request):
+    # TODO
+    pass

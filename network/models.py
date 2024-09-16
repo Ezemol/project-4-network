@@ -15,17 +15,17 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id":self.id,
-            "poster":self.poster,
+            "poster":self.user,
             "body":self.body,
             "timestamp":self.timestamp,
-            "likes":self.likes,
+            "likes":self.likes.count(),
         }
 
-    def like(self):
-        self.likes.add(self.user)
+    def like(self, user):
+        self.likes.add(user)
 
-    def dislike(self):
-        self.likes.remove(self.user)
+    def dislike(self, user):
+        self.likes.remove(user)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")

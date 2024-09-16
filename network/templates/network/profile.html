@@ -1,27 +1,27 @@
-{% extends "network/layout.html" %}
-{% load static %}
+{% extends "network/layout.html" %}  <!-- Extiende el layout principal de la red social -->
+{% load static %}  <!-- Carga los archivos estáticos -->
 
 {% block body %}
-    <div id="profile-view"  data-is-following="{{ is_following|yesno:'true,false' }}" data-user-id="{{ profile.user.id }}">
-        <h1>{{ profile.user }}</h1>
+    <div id="profile-view" data-is-following="{{ is_following|yesno:'true,false' }}" data-user-id="{{ profile.user.id }}">
+        <h1>{{ profile.user }}</h1>  <!-- Muestra el nombre del usuario del perfil -->
 
-        {% if posts %}
+        {% if posts %}  <!-- Verifica si hay publicaciones -->
         <div>
-            <p>Followers: {{ num_followers }}</p>
-            <p>Following {{ num_following }} </p>
+            <p>Followers: {{ num_followers }}</p>  <!-- Muestra la cantidad de seguidores -->
+            <p>Following: {{ num_following }} </p>  <!-- Muestra la cantidad de personas que sigue -->
 
-            {% for post in posts %}
+            {% for post in posts %}  <!-- Itera sobre todas las publicaciones -->
                 <p>
                     <hr>
-                    {{ post.timestamp }}
+                    {{ post.timestamp }}  <!-- Muestra la fecha y hora de la publicación -->
                     <hr>
-                    <p>Post made by: {{ post.user }}</p>
-                    <p>{{ post.body }}</p>
+                    <p>Post made by: {{ post.user }}</p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
+                    <p>{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
                     <p>
-                        {% if post.likes %}
-                            Likes: {{ post.likes }}
+                        {% if post.likes %}  <!-- Verifica si la publicación tiene likes -->
+                            Likes: {{ post.likes.count }}  <!-- Muestra el número de likes -->
                         {% else %}
-                            Likes: 0
+                            Likes: 0  <!-- Si no hay likes, muestra 0 -->
                         {% endif %}
                     </p>
                 </p>
@@ -29,16 +29,16 @@
         </div> 
         <div>
         {% else %}
-                No active posts.
+            No active posts.  <!-- Mensaje cuando no hay publicaciones activas -->
         {% endif %}
         
-        {% if is_profile != True %}
-            <div id="follow-div"></div>
+        {% if is_profile != True and request.user.is_authenticated %}  <!-- Verifica si no es el perfil del usuario autenticado -->
+            <div id="follow-div"></div>  <!-- Div para el botón de seguir/ dejar de seguir -->
         {% endif %}
     </div>
 {% endblock %}
 
 {% block script %}
     <!-- Importar el script para la funcionalidad de la bandeja de entrada -->
-     <script src="{% static 'network/profile.js' %}"></script>
+    <script src="{% static 'network/profile.js' %}"></script>  <!-- Script que maneja el seguimiento de usuarios -->
 {% endblock %}

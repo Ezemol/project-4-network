@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse  # Resp
 from django.shortcuts import render, get_object_or_404  # Funciones para renderizar vistas y obtener objetos
 from django.urls import reverse  # Función para generar URLs
 import json  # Módulo para manejar JSON
+from django.core.paginator import Paginator # Crear páginas en el front
 
 from .models import User, Post, Profile  # Importar modelos necesarios
 
@@ -14,9 +15,18 @@ def index(request):
     # Obtener todos los posts activos ordenados por fecha
     active_posts = Post.objects.filter(is_active=True).order_by('-timestamp')
 
+    # Creo página cada 10 posts
+    paginator = Paginator(active_posts, 10)
+
+    # Obtener la página en la que está el usuario
+    page_num = request.GET.get('page')
+    page_posts = paginator.get_page(page_num)
+    
+
     # Renderizar la vista del índice con los posts activos
     return render(request, "network/index.html", {
-        "active_posts": active_posts
+        "active_posts": page_posts,
+        "title_page": "All posts"
     })
 
 
@@ -155,3 +165,31 @@ def follow_user(request, profile_id):
         else:
             return JsonResponse({"error": "The user is not authenticated"}, status=403)  # Manejar usuario no autenticado
     return JsonResponse({"error": "POST request required."}, status=400)  # Manejar método incorrecto
+
+
+# Función para cargar página con posts de following people.
+@login_required
+def following(request):
+    # Crear user variable
+    user = request.user
+    # Verificar si el usuario sigue a alguien
+    if (user.following.count() > 0):
+        # Obtener la lista de perfiles seguidos por el usuario
+        following_profiles = user.following.all()
+
+        # Crear un array con los usuarios que sigue
+        following_users = [profile.user for profile in following_profiles]
+
+        # Filtrar los posts activos hechos por esos usuarios.
+        active_posts = Post.objects.filter(is_active=True, user__in=following_users).order_by("-timestamp")
+        
+        # Renderizar página
+        return render(request, "network/index.html", {
+            "active_posts":active_posts,
+            "title_page": "Following Page"
+        })
+    else:
+        return render(request, "network/index.html", {
+            "message": "You are currently not following anyone.",
+            "title_page": "Following Page"
+        })

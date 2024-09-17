@@ -1,6 +1,12 @@
 {% extends "network/layout.html" %}
 
+{% block title %}{{ title_page }}{% endblock %}
+
 {% block body %}
+    <h1>{{ title_page }}</h1>
+    {% if message %}
+        {{ message }}
+    {% endif %}
     {% if active_posts %}
         <div>
             {% for post in active_posts %}
@@ -10,7 +16,6 @@
                     <hr>
                     <p>Post made by: <a href="{% url 'profile' post.user  %}">{{ post.user }}</a></p>
                     <p>{{ post.body }}</p>
-    
                     <p>
                         {% if post.likes %}
                             Likes: {{ post.likes }}
@@ -21,8 +26,5 @@
                 </p>
             {% endfor %}
         </div> 
-        <div>
-    {% else %}
-            <h3>No active posts.</h3>
     {% endif %}
 {% endblock %}

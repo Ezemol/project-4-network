@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse  # Resp
 from django.shortcuts import render, get_object_or_404  # Funciones para renderizar vistas y obtener objetos
 from django.urls import reverse  # Función para generar URLs
 import json  # Módulo para manejar JSON
-from django.core.paginator import Paginator # Crear páginas en el front
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage # Crear páginas en el front
 
 from .models import User, Post, Profile  # Importar modelos necesarios
 
@@ -15,18 +15,13 @@ def index(request):
     # Obtener todos los posts activos ordenados por fecha
     active_posts = Post.objects.filter(is_active=True).order_by('-timestamp')
 
-    # Creo página cada 10 posts
-    paginator = Paginator(active_posts, 10)
-
-    # Obtener la página en la que está el usuario
-    page_num = request.GET.get('page')
-    page_posts = paginator.get_page(page_num)
-    
+    # Variable con las páginas y sus posts respectivos
+    pagin = paginator(request, active_posts)
 
     # Renderizar la vista del índice con los posts activos
     return render(request, "network/index.html", {
-        "active_posts": page_posts,
-        "title_page": "All posts"
+        "active_posts": pagin["page_posts"],
+        "title_page": "All posts",
     })
 
 
@@ -112,6 +107,9 @@ def profile(request, username):
     # Obtener todos los posts del dueño del perfil
     posts = Post.objects.filter(user=user).order_by("-timestamp")
 
+    # Variable con las páginas y sus posts respectivos
+    pagin = paginator(request, posts)
+
     # Inicializar variables
     is_following = False
     is_profile = False
@@ -129,7 +127,7 @@ def profile(request, username):
     return render(request, "network/profile.html", {
             "profile_user": user,
             "profile": profile,
-            "posts": posts,
+            "active_posts": pagin["page_posts"],
             "is_following": is_following,
             "num_followers": num_followers,
             "num_following": num_following,
@@ -182,10 +180,13 @@ def following(request):
 
         # Filtrar los posts activos hechos por esos usuarios.
         active_posts = Post.objects.filter(is_active=True, user__in=following_users).order_by("-timestamp")
+
+        # Variable con las páginas y sus posts respectivos
+        pagin = paginator(request, active_posts)
         
         # Renderizar página
         return render(request, "network/index.html", {
-            "active_posts":active_posts,
+            "active_posts": pagin["page_posts"],
             "title_page": "Following Page"
         })
     else:
@@ -193,3 +194,26 @@ def following(request):
             "message": "You are currently not following anyone.",
             "title_page": "Following Page"
         })
+    
+
+# Creo función para hacer páginas
+def paginator(request, posts):     
+    # Creo página cada 10 posts
+    paginator = Paginator(posts, 10)
+
+    # Obtener la página en la que está el usuario o la primera como predeterminada
+    page_num = request.GET.get('page', 1)
+
+    try:
+        # Intentar obtener la página solicitada
+        page_posts = paginator.get_page(page_num)
+    except PageNotAnInteger:
+        # Si el número de página no es un numero entero, mostrar la primera página
+        page_posts = paginator.page(1)
+    except EmptyPage:
+        # Si el número de página está fuera de rango, mostrar la última página disponible
+        page_posts = paginator.page(paginator.num_pages)
+
+    return {
+        "page_posts": page_posts,
+    }

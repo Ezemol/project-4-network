@@ -5,12 +5,12 @@
     <div id="profile-view" data-is-following="{{ is_following|yesno:'true,false' }}" data-user-id="{{ profile.user.id }}">
         <h1>{{ profile.user }}</h1>  <!-- Muestra el nombre del usuario del perfil -->
 
-        {% if posts %}  <!-- Verifica si hay publicaciones -->
+        {% if active_posts %}  <!-- Verifica si hay publicaciones -->
         <div>
             <p>Followers: {{ num_followers }}</p>  <!-- Muestra la cantidad de seguidores -->
             <p>Following: {{ num_following }} </p>  <!-- Muestra la cantidad de personas que sigue -->
 
-            {% for post in posts %}  <!-- Itera sobre todas las publicaciones -->
+            {% for post in active_posts %}  <!-- Itera sobre todas las publicaciones -->
                 <p>
                     <hr>
                     {{ post.timestamp }}  <!-- Muestra la fecha y hora de la publicación -->
@@ -29,8 +29,26 @@
         </div> 
         <div>
         {% else %}
-            No active posts.  <!-- Mensaje cuando no hay publicaciones activas -->
+            No active active_posts.  <!-- Mensaje cuando no hay publicaciones activas -->
         {% endif %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if active_posts.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ active_posts.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ active_posts.number }} of {{ active_posts.paginator.num_pages }}.
+                </span>
+        
+                {% if active_posts.has_next %}
+                    <a href="?page={{ active_posts.next_page_number }}">next</a>
+                    <a href="?page={{ active_posts.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         
         {% if is_profile != True and request.user.is_authenticated %}  <!-- Verifica si no es el perfil del usuario autenticado -->
             <div id="follow-div"></div>  <!-- Div para el botón de seguir/ dejar de seguir -->

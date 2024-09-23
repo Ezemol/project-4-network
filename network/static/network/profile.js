@@ -18,6 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
         follow(profileId, isFollowing);  // Llama a la función follow
     });
 
+    // Selecciona todos los botones de edición
+    document.querySelectorAll(`[id^=""edit-post-button]`).forEach(button => {
+        // Añade un event listener a cada boton
+        button.addEventListener('click', () => {
+            const postId = button.id.split('-').pop(); // Obtiene el posId del boton
+            editPost(postId); // Llama a la función editPost pasando el id del boton seleccionado.
+        });
+    });
+
+
     function follow(profileId, isFollowing) {
         // Realiza una solicitud para seguir/desseguir al usuario
         fetch(`/follow/${profileId}/`, {
@@ -60,5 +70,46 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         return cookieValue;  // Devuelve el valor de la cookie
+    }
+    
+    // Funcion para editar texto del post
+    function editPost(postId) {
+        const postBody = document.querySelector(`#post-body[data-post-id="${postId}"]`);
+        const originalText = postBody.textContent;
+
+        postBody.innerHTML = `
+            <textarea id="textarea-${postId}">${originalText}</textarea>
+            <button id="save-post-${postId}" class="btn btn-primary">Save</button>
+        `
+
+        document.querySelector(`#save-post-${postId}`).addEventListener('click', () => {
+            const updatedContent = document.querySelector(`#textarea-${postId}`).value;
+            savePost(postId, updatedContent);
+        })
+    }
+
+    // Save post function
+    function savePost(postId, updatedContent) {
+        fetch(`/edit_post/${postId}`, {
+            method: 'POST', 
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                content: updatedContent
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                // Actualiza el contenido del post en la página
+                const postBody = document.querySelector(`#post-body[data-post-id="${postId}]`);
+                postBody.innerHTML =result.updatedContent;
+            }
+        })
+        .catch(error => {
+            console.error('Error: ', error);
+        })
     }
 });

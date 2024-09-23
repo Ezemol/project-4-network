@@ -18,11 +18,14 @@
                     <p>{{ post.body }}</p>
                     <p>
                         {% if post.likes %}
-                            Likes: {{ post.likes }}
+                            Likes: {{ post.likes.count }}
                         {% else %}
                             Likes: 0
                         {% endif %}
                     </p>
+                    {% if post.user == request.user %}
+                        <button id="edit-post-button">Edit Post</button>
+                    {% endif %}
                 </p>
             {% endfor %}
         </div> 

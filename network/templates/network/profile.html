@@ -16,7 +16,7 @@
                     {{ post.timestamp }}  <!-- Muestra la fecha y hora de la publicación -->
                     <hr>
                     <p>Post made by: {{ post.user }}</p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
-                    <p>{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
+                    <p id="post-body" data-post-id="{{post.id}}">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
                     <p>
                         {% if post.likes %}  <!-- Verifica si la publicación tiene likes -->
                             Likes: {{ post.likes.count }}  <!-- Muestra el número de likes -->
@@ -24,6 +24,9 @@
                             Likes: 0  <!-- Si no hay likes, muestra 0 -->
                         {% endif %}
                     </p>
+                    {% if post.user == request.user %}
+                        <button id="edit-post-button-{{post.id}}">Edit Post</button>
+                    {% endif %}
                 </p>
             {% endfor %}
         </div> 

@@ -33,6 +33,10 @@
         <div>
         {% else %}
             No active active_posts.  <!-- Mensaje cuando no hay publicaciones activas -->
+        {% endif %} 
+        
+        {% if is_profile != True and request.user.is_authenticated %}  <!-- Verifica si no es el perfil del usuario autenticado -->
+            <div id="follow-div"></div>  <!-- Div para el botón de seguir/ dejar de seguir -->
         {% endif %}
 
         <div class="pagination">
@@ -52,10 +56,6 @@
                 {% endif %}
             </span>
         </div>
-        
-        {% if is_profile != True and request.user.is_authenticated %}  <!-- Verifica si no es el perfil del usuario autenticado -->
-            <div id="follow-div"></div>  <!-- Div para el botón de seguir/ dejar de seguir -->
-        {% endif %}
     </div>
 {% endblock %}
 

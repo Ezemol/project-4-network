@@ -1,28 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Obtener el valor de 'is_following' desde el atributo data-is-following
     const profileView = document.querySelector('#profile-view');
-    let isFollowing = profileView.getAttribute('data-is-following') === 'true';  // Convierte el valor a booleano
-    const profileId = profileView.getAttribute('data-user-id');  // Obtiene el ID del perfil
-    
-    // Generar el botón de follow/unfollow
-    document.querySelector('#follow-div').innerHTML = `
-        <button id="button-follow" class="btn-secondary btn">
-            ${isFollowing ? "Unfollow" : "Follow"}  
-        </button>`; // Cambia el texto del botón según el estado
 
-    // Añadir event listener al botón de follow/unfollow
-    document.querySelector('#button-follow').addEventListener('click', () => {
-        const action = isFollowing ? "unfollow" : "follow";  // Define la acción a realizar
-        console.log(action);  // Muestra la acción en la consola
+    if (profileView) {
+        let isFollowing = profileView.getAttribute('data-is-following') === 'true';  // Convierte el valor a booleano
+        const profileId = profileView.getAttribute('data-user-id');  // Obtiene el ID del perfil
 
-        follow(profileId, isFollowing);  // Llama a la función follow
-    });
+        // Declaro variable del div del follow
+        const followDiv = document.querySelector('#follow-div');
+
+        if (followDiv) {
+            // Agrego boton de follow/unfollow
+            followDiv.innerHTML = `
+            <button id="button-follow" class="btn-secondary btn">
+                ${isFollowing ? "Unfollow" : "Follow"}  
+            </button>`; // Cambia el texto del botón según el estado
+
+            // Añadir event listener al botón de follow/unfollow
+            document.querySelector('#button-follow').addEventListener('click', () => {
+                const action = isFollowing ? "unfollow" : "follow";  // Define la acción a realizar
+                console.log(action);  // Muestra la acción en la consola
+
+                follow(profileId, isFollowing);  // Llama a la función follow
+            });
+        }
+    }
 
     // Selecciona todos los botones de edición
-    document.querySelectorAll(`[id^=""edit-post-button]`).forEach(button => {
+    document.querySelectorAll(`[id^="edit-post-button"]`).forEach(button => {
         // Añade un event listener a cada boton
         button.addEventListener('click', () => {
-            const postId = button.id.split('-').pop(); // Obtiene el posId del boton
+            const postId = button.id.split('-').pop(); // Obtiene el postId del boton
             editPost(postId); // Llama a la función editPost pasando el id del boton seleccionado.
         });
     });
@@ -90,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Save post function
     function savePost(postId, updatedContent) {
-        fetch(`/edit_post/${postId}`, {
+        fetch(`/edit_post/${postId}/`, {
             method: 'POST', 
             headers: {
                 'Content-type': 'application/json',
@@ -102,10 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(result => {
+            // Mostrar en pantalla
+            console.log(result);
+
             if (result.success) {
                 // Actualiza el contenido del post en la página
-                const postBody = document.querySelector(`#post-body[data-post-id="${postId}]`);
-                postBody.innerHTML =result.updatedContent;
+                const postBody = document.querySelector(`#post-body[data-post-id="${postId}"]`);
+                postBody.innerHTML = result.updatedContent;
+
+
+            } else {
+                console.error('Error al actualizar el post.', result.error);
             }
         })
         .catch(error => {

@@ -217,3 +217,30 @@ def paginator(request, posts):
     return {
         "page_posts": page_posts,
     }
+
+def edit_post(request, post_id):
+    if request.method == 'POST':
+        try:
+            # Obtener el contenido del post enviado
+            data = json.loads(request.body)
+            new_content = data.get('content')
+
+            # Buscar el post en la base de datos y actualizar su contenido
+            post = Post.objects.get(id=post_id)
+
+            # Verifica si el usuario que hace la solicitud es el dueño del post.
+            if post.user == request.user:
+                post.body = new_content
+                post.save()
+
+                # Return éxito
+                return JsonResponse({"success": True, "updatedContent": new_content})
+            else:
+                # Devuelve error
+                return JsonResponse({"error": "You don't have permission to edit this post."}, status=403)
+        except Post.DoesNotExist:
+            return JsonResponse({"error": "Post not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Método no permitido."}, status=405)

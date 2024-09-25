@@ -178,8 +178,14 @@ def following(request):
         # Crear un array con los usuarios que sigue
         following_users = [profile.user for profile in following_profiles]
 
+        posts = Post.objects.all()
+
         # Filtrar los posts activos hechos por esos usuarios.
-        active_posts = Post.objects.filter(is_active=True, user__in=following_users).order_by("-timestamp")
+        active_posts = posts.filter(is_active=True, user__in=following_users).order_by("-timestamp")
+
+        # Ver si ya likeó o no el post
+        for post in posts:
+            post.is_liked = post.likes.filter(id=request.user.id).exists()
 
         # Variable con las páginas y sus posts respectivos
         pagin = paginator(request, active_posts)
@@ -187,7 +193,8 @@ def following(request):
         # Renderizar página
         return render(request, "network/index.html", {
             "active_posts": pagin["page_posts"],
-            "title_page": "Following Page"
+            "title_page": "Following Page",
+            "posts": posts,
         })
     else:
         return render(request, "network/index.html", {
@@ -218,6 +225,8 @@ def paginator(request, posts):
         "page_posts": page_posts,
     }
 
+@login_required
+# Edit post view
 def edit_post(request, post_id):
     if request.method == 'POST':
         try:
@@ -244,3 +253,32 @@ def edit_post(request, post_id):
             return JsonResponse({"error": str(e)}, status=500)
     else:
         return JsonResponse({"error": "Método no permitido."}, status=405)
+    
+
+@login_required
+# Like / dislike post view
+def like_post(request, post_id):
+    if request.method == 'POST':
+        try:
+            # Obtener el contenido del post enviado
+            data = json.loads(request.body)
+            is_liked = data.get('isLiked')  
+
+            # Buscar en la base de datos el post   
+            post = Post.objects.get(id=post_id)
+
+            # Actualizar base de datos
+            if is_liked == True:
+                post.like(request.user)
+            else:
+                post.dislike(request.user)
+            post.save()
+            
+            return JsonResponse({"success": True, "isLiked": is_liked})
+        
+        except Post.DoesNotExist:
+            return JsonResponse({"error": "Post not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({'error': "Method not allowed."}, status=405)

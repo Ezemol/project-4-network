@@ -24,9 +24,12 @@
                             Likes: 0
                         {% endif %}
                     </p>
-                    {% if post.user == request.user %}
-                        <button id="edit-post-button-{{post.id}}">Edit Post</button>
-                    {% endif %}
+                    <div><button id="like-post-button-{{post.id}}">Like</button></div>
+                    <div>
+                        {% if post.user == request.user %}
+                            <button id="edit-post-button-{{post.id}}">Edit Post</button>
+                        {% endif %}
+                    </div>                    
                 </p>
             {% endfor %}
         </div> 

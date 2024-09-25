@@ -35,6 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Selecciona todos los botones de like
+    const likeButton = document.querySelectorAll(`[id^="like-post-button"]`).forEach(button => {
+        button.addEventListener('click', () => {
+            const postId = button.id.split('-').pop(); // Obtiene el postId del boton
+            const isLiked = document.querySelector(`#like-post-button-${postId}`).textContent.trim();
+            // Pasa el id del post y si ya likeó o no este post.
+            if (isLiked === 'Like') {
+                likePost(postId, true); // Llama a la función likePost pasando el id del boton seleccionado.
+            } else {
+                likePost(postId, false);
+            }
+        });
+    });
+
 
     function follow(profileId, isFollowing) {
         // Realiza una solicitud para seguir/desseguir al usuario
@@ -120,8 +134,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             } else {
-                console.error('Error al actualizar el post.', result.error);
+                console.error('Error changing the post.', result.error);
             }
+        })
+        .catch(error => {
+            console.error('Error: ', error);
+        })
+    }
+
+    // Función para like/dislike post
+    function likePost(postId, isLiked) {
+        fetch(`/like_post/${postId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                isLiked: isLiked
+            })
+        }) 
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+
+            if (result.success) {
+                const likeButton = document.querySelector(`#like-post-button-${postId}`);
+                likeButton.innerHTML =  `${isLiked ? "Unlike" : "Like"}`;
+            } else {
+                console.error('Error liking the post.', result.error);
+            }
+
         })
         .catch(error => {
             console.error('Error: ', error);

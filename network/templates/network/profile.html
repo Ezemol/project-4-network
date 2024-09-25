@@ -17,16 +17,19 @@
                     <hr>
                     <p>Post made by: {{ post.user }}</p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
                     <p id="post-body" data-post-id="{{post.id}}">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
-                    <p>
+                    <p data-liked="">
                         {% if post.likes %}  <!-- Verifica si la publicación tiene likes -->
                             Likes: {{ post.likes.count }}  <!-- Muestra el número de likes -->
                         {% else %}
                             Likes: 0  <!-- Si no hay likes, muestra 0 -->
                         {% endif %}
                     </p>
-                    {% if post.user == request.user %}
-                        <button id="edit-post-button-{{post.id}}">Edit Post</button>
-                    {% endif %}
+                    <div><button id="like-post-button-{{post.id}}"></button></div>
+                    <div>
+                        {% if post.user == request.user %}
+                            <button id="edit-post-button-{{post.id}}">Edit Post</button>
+                        {% endif %}
+                    </div>    
                 </p>
             {% endfor %}
         </div> 

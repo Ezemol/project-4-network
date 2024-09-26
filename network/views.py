@@ -18,6 +18,10 @@ def index(request):
     # Variable con las páginas y sus posts respectivos
     pagin = paginator(request, active_posts)
 
+    # Ver si ya likeó o no el post
+    for post in active_posts:
+        post.is_liked = post.likes.filter(id=request.user.id).exists()
+        
     # Renderizar la vista del índice con los posts activos
     return render(request, "network/index.html", {
         "active_posts": pagin["page_posts"],
@@ -105,10 +109,13 @@ def profile(request, username):
     profile, created = Profile.objects.get_or_create(user=user)
 
     # Obtener todos los posts del dueño del perfil
-    posts = Post.objects.filter(user=user).order_by("-timestamp")
+    active_posts = Post.objects.filter(user=user).order_by("-timestamp")
 
     # Variable con las páginas y sus posts respectivos
-    pagin = paginator(request, posts)
+    pagin = paginator(request, active_posts)
+
+    for post in active_posts:
+        post.is_liked = post.likes.filter(id=request.user.id).exists()
 
     # Inicializar variables
     is_following = False
@@ -178,13 +185,11 @@ def following(request):
         # Crear un array con los usuarios que sigue
         following_users = [profile.user for profile in following_profiles]
 
-        posts = Post.objects.all()
-
         # Filtrar los posts activos hechos por esos usuarios.
-        active_posts = posts.filter(is_active=True, user__in=following_users).order_by("-timestamp")
+        active_posts = Post.objects.filter(is_active=True, user__in=following_users).order_by("-timestamp")
 
         # Ver si ya likeó o no el post
-        for post in posts:
+        for post in active_posts:
             post.is_liked = post.likes.filter(id=request.user.id).exists()
 
         # Variable con las páginas y sus posts respectivos
@@ -194,7 +199,6 @@ def following(request):
         return render(request, "network/index.html", {
             "active_posts": pagin["page_posts"],
             "title_page": "Following Page",
-            "posts": posts,
         })
     else:
         return render(request, "network/index.html", {

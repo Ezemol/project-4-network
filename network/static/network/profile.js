@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Selecciona todos los botones de like
-    const likeButton = document.querySelectorAll(`[id^="like-post-button"]`).forEach(button => {
+    document.querySelectorAll(`[id^="like-post-button"]`).forEach(button => {
         button.addEventListener('click', () => {
             const postId = button.id.split('-').pop(); // Obtiene el postId del boton
             const isLiked = document.querySelector(`#like-post-button-${postId}`).textContent.trim();
@@ -70,6 +70,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.is_following !== undefined) {  // Verifica si el campo is_following está en la respuesta
                 isFollowing = result.is_following;  // Actualiza la variable isFollowing
                 document.querySelector('#button-follow').innerText = isFollowing ? "Unfollow" : "Follow";  // Cambia el texto del botón
+
+                // Actualizar los followers del perfil sin recargar la página
+                const numFollowersElement = document.querySelector("#num_followers");
+
+                let numFollowers = parseInt(numFollowersElement.textContent, 10);
+
+                if (isFollowing) {
+                    numFollowers++;
+                } else {
+                    numFollowers--;
+                }
+
+                numFollowersElement.innerHTML = `${numFollowers}`
             }
         })
         .catch(error => {
@@ -159,8 +172,31 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(result);
 
             if (result.success) {
+
+                // Cambiar el contenido del boton like/unlike
                 const likeButton = document.querySelector(`#like-post-button-${postId}`);
                 likeButton.innerHTML =  `${isLiked ? "Unlike" : "Like"}`;
+
+                // Actualizar el número de likes
+                const likesCountElement = document.querySelector(`#likes-count-${postId}`);
+
+                // Convertir el contenido actual de likesCount a un número
+                let likesCount = parseInt(likesCountElement.textContent, 10);
+
+                if (isLiked) {
+                    likesCount++; // Incrementa el núm de likes
+                } else {
+                    likesCount--; // Decrementa el num de likes
+                }
+
+                // Actualizar el contenido del html con el nuevo valor
+                if (likesCount === 1) {
+                    likesCountElement.innerHTML = `${likesCount} Like`;
+                } else {
+                    likesCountElement.innerHTML = `${likesCount} Likes`;
+                }
+                
+                
             } else {
                 console.error('Error liking the post.', result.error);
             }

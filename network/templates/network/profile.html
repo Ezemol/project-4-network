@@ -7,8 +7,8 @@
 
         {% if active_posts %}  <!-- Verifica si hay publicaciones -->
         <div>
-            <p>Followers: {{ num_followers }}</p>  <!-- Muestra la cantidad de seguidores -->
-            <p>Following: {{ num_following }} </p>  <!-- Muestra la cantidad de personas que sigue -->
+            <p>Followers: <span id="num_followers">{{ num_followers }}</span></p>  <!-- Muestra la cantidad de seguidores -->
+            <p>Following: {{ num_following }}</p>  <!-- Muestra la cantidad de personas que sigue -->
 
             {% for post in active_posts %}  <!-- Itera sobre todas las publicaciones -->
                 <p>
@@ -17,14 +17,23 @@
                     <hr>
                     <p>Post made by: {{ post.user }}</p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
                     <p id="post-body" data-post-id="{{post.id}}">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
-                    <p data-liked="">
-                        {% if post.likes %}  <!-- Verifica si la publicación tiene likes -->
-                            Likes: {{ post.likes.count }}  <!-- Muestra el número de likes -->
-                        {% else %}
-                            Likes: 0  <!-- Si no hay likes, muestra 0 -->
+                    <div>
+                        <p>{{ post.body }}</p>
+                        {% if request.user.is_authenticated %}
+                            <button id="like-post-button-{{ post.id }}">
+                                {% if post.is_liked %}
+                                    Unlike
+                                {% else %}
+                                    Like
+                                {% endif %}
+                            </button>
                         {% endif %}
-                    </p>
-                    <div><button id="like-post-button-{{post.id}}"></button></div>
+                        {% if post.likes.count == 1 %}
+                            <span id="likes-count-{{post.id}}">{{ post.likes.count }} Like</span>
+                        {% else %}
+                            <span id="likes-count-{{post.id}}">{{ post.likes.count }} Likes</span>
+                        {% endif %}
+                    </div>
                     <div>
                         {% if post.user == request.user %}
                             <button id="edit-post-button-{{post.id}}">Edit Post</button>

@@ -21,7 +21,7 @@ def index(request):
     # Ver si ya likeó o no el post
     for post in active_posts:
         post.is_liked = post.likes.filter(id=request.user.id).exists()
-        
+
     # Renderizar la vista del índice con los posts activos
     return render(request, "network/index.html", {
         "active_posts": pagin["page_posts"],
@@ -174,7 +174,7 @@ def follow_user(request, profile_id):
 
 # Función para cargar página con posts de following people.
 @login_required
-def following(request):
+def following_posts(request):
     # Crear user variable
     user = request.user
     # Verificar si el usuario sigue a alguien
@@ -198,12 +198,12 @@ def following(request):
         # Renderizar página
         return render(request, "network/index.html", {
             "active_posts": pagin["page_posts"],
-            "title_page": "Following Page",
+            "title_page": "Following Posts Page",
         })
     else:
         return render(request, "network/index.html", {
             "message": "You are currently not following anyone.",
-            "title_page": "Following Page"
+            "title_page": "Following Posts Page"
         })
     
 
@@ -286,3 +286,28 @@ def like_post(request, post_id):
             return JsonResponse({"error": str(e)}, status=500)
     else:
         return JsonResponse({'error': "Method not allowed."}, status=405)
+    
+
+# Página de los perfiles que sigue el user
+def profile_connections(request, profile_id):
+
+     # Obtener el usuario cuyo perfil se está consultando
+    user = get_object_or_404(User, pk=profile_id)
+
+    # Determinar si se va a mostrar la lista de seguidores o seguidos
+    view_type = request.GET.get('view', 'followers')  # Valor por defecto: 'followers'
+
+    if view_type == 'following': 
+        profiles = user.following.all()
+        title = 'Following'
+    else:
+        profiles = user.profile.followers.all()
+        title = 'Followers'
+
+    return render(request, 'network/profile_connections.html', {
+        "username": user,
+        "profiles": profiles,
+        "title": title,
+        "view_type": view_type,
+    })
+

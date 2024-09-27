@@ -1,0 +1,32 @@
+{% extends 'network/layout.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+    <h1>{{ title }} of {{ username }}</h1>
+
+    {% for user in profiles %}
+        <ul>
+            {% if view_type == 'following' %}
+                <li>
+                    <a href="{% url 'profile' user.user %}">{{ user.user }}</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'profile' user %}">{{ user }}</a>
+                </li>
+            {% endif %}
+        </ul>
+    {% empty %}
+        <!-- Si la lista está vacía, mostrar un mensaje -->
+        <li>
+            {% if view_type == 'following' %}
+                No following
+            {% else %}
+                No followers
+            {% endif %}
+        </li>
+    {% endfor %}
+
+{% endblock %}

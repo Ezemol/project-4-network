@@ -7,8 +7,13 @@
 
         {% if active_posts %}  <!-- Verifica si hay publicaciones -->
         <div>
-            <p>Followers: <span id="num_followers">{{ num_followers }}</span></p>  <!-- Muestra la cantidad de seguidores -->
-            <p>Following: {{ num_following }}</p>  <!-- Muestra la cantidad de personas que sigue -->
+            <p><a href="{% url 'profile_connections' profile.user.id %}?view=followers">
+                Followers: <span id="num_followers">{{ num_followers }}</span>
+            </a></p>  <!-- Muestra la cantidad de seguidores -->
+
+            <p><a href="{% url 'profile_connections' profile.user.id %}?view=following">
+                Following: {{ num_following }}
+            </a></p>  <!-- Muestra la cantidad de personas que sigue -->
 
             {% for post in active_posts %}  <!-- Itera sobre todas las publicaciones -->
                 <p>

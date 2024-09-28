@@ -9,8 +9,9 @@ class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user")
     body = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True, default=0)
+    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
     is_active = models.BooleanField(default=True)
+    is_liked = models.BooleanField(default=False)
 
     def serialize(self):
         return {
@@ -19,13 +20,16 @@ class Post(models.Model):
             "body":self.body,
             "timestamp":self.timestamp,
             "likes":self.likes.count(),
+            "is_liked":self.is_liked,
         }
 
     def like(self, user):
-        self.likes.add(user)
+        if not self.likes.filter(id=user.id).exists():  # Solo añadir si no existe
+            self.likes.add(user)
 
     def dislike(self, user):
-        self.likes.remove(user)
+        if self.likes.filter(id=user.id).exists():  # Solo eliminar si existe
+            self.likes.remove(user)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")

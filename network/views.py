@@ -114,8 +114,10 @@ def profile(request, username):
     # Variable con las páginas y sus posts respectivos
     pagin = paginator(request, active_posts)
 
+    # Verificar los likes de cada post
     for post in active_posts:
         post.is_liked = post.likes.filter(id=request.user.id).exists()
+        post.save()
 
     # Inicializar variables
     is_following = False
@@ -190,7 +192,7 @@ def following_posts(request):
 
         # Ver si ya likeó o no el post
         for post in active_posts:
-            post.is_liked = post.likes.filter(id=request.user.id).exists()
+            post.is_liked = post.likes.filter(user_id=request.user.id).exists()
 
         # Variable con las páginas y sus posts respectivos
         pagin = paginator(request, active_posts)
@@ -271,11 +273,13 @@ def like_post(request, post_id):
             # Buscar en la base de datos el post   
             post = Post.objects.get(id=post_id)
 
-            # Actualizar base de datos
             if is_liked == True:
                 post.like(request.user)
+                print(f'User {request.user.id} liked post {post_id}')
             else:
                 post.dislike(request.user)
+                print(f'User {request.user.id} unliked post {post_id}')
+
             post.save()
             
             return JsonResponse({"success": True, "isLiked": is_liked})
@@ -286,7 +290,6 @@ def like_post(request, post_id):
             return JsonResponse({"error": str(e)}, status=500)
     else:
         return JsonResponse({'error': "Method not allowed."}, status=405)
-    
 
 # Página de los perfiles que sigue el user
 def profile_connections(request, profile_id):

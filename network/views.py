@@ -67,6 +67,10 @@ def register(request):
                 "message": "Passwords must match."  # Mensaje de error
             })
 
+        if not username or email or password or confirmation:
+            return render(request, "network/register.html", {
+                "message": "You have to complete all the fields."
+            })
         # Intentar crear un nuevo usuario
         try:
             user = User.objects.create_user(username, email, password)

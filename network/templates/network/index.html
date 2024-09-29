@@ -13,33 +13,39 @@
             {% for post in active_posts %}
             <p class="post-p">
                 <p class="mini-title">
-                    Post made by: {{ post.user }}
+                    Post made by: <a class="post-link principal-button" href="{% url 'profile' post.user %}">{{ post.user }}</a>
                     <span class="timestamp">{{ post.timestamp }}</span>  <!-- Muestra la fecha y hora de la publicación -->
                 </p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
                 <hr>
                     <p id="post-body" data-post-id="{{post.id}}" class="post-body">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
-                    <div>
-                        {% if request.user.is_authenticated %}
-                            <button class="change-button" id="like-post-button-{{ post.id }}">
-                                {% if post.is_liked %}
-                                    Unlike
+                    <div class="post-actions">
+                        <div class="left-actions">
+                            {% if request.user.is_authenticated %}
+                                <button class="action-button" id="like-post-button-{{ post.id }}">
+                                    {% if post.is_liked %}
+                                        Unlike
+                                    {% else %}
+                                        Like
+                                    {% endif %}
+                                </button>
+                            {% endif %}
+                            
+                            <span class="likes-count" id="likes-count-{{post.id}}">
+                                {% if post.likes.count == 1 %}
+                                    {{ post.likes.count }} Like
                                 {% else %}
-                                    Like
+                                    {{ post.likes.count }} Likes
                                 {% endif %}
-                            </button>
-                        {% endif %}
-                        {% if post.likes.count == 1 %}
-                            <span class="likes-count" id="likes-count-{{post.id}}">{{ post.likes.count }} Like</span>
-                        {% else %}
-                            <span class="likes-count" id="likes-count-{{post.id}}">{{ post.likes.count }} Likes</span>
-                        {% endif %}
-                    </div>
-                    <div>
+                            </span>
+                        </div>
+                    
                         {% if post.user == request.user %}
-                            <button class="change-button" id="edit-post-button-{{post.id}}">Edit Post</button>
+                            <div class="right-actions">
+                                <button class="action-button" id="edit-post-button-{{post.id}}">Edit Post</button>
+                            </div>
                         {% endif %}
-                    </div>                    
-                </p>
+                    </div>                         
+            </p>
             {% endfor %}
         </div> 
 

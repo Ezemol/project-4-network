@@ -6,27 +6,25 @@
 
     <h1 class="principal-title">{{ title }} of {{ username }}</h1>
 
-    {% for user in profiles %}
-        <ul>
-            {% if view_type == 'following' %}
-                <li>
-                    <a href="{% url 'profile' user.user %}">{{ user.user }}</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{% url 'profile' user %}">{{ user }}</a>
-                </li>
-            {% endif %}
-        </ul>
-    {% empty %}
-        <!-- Si la lista está vacía, mostrar un mensaje -->
-        <li>
-            {% if view_type == 'following' %}
-                No following
-            {% else %}
-                No followers
-            {% endif %}
-        </li>
-    {% endfor %}
+    <ul class="profile-list">
+        {% for user in profiles %}
+            <li class="profile-item">
+                {% if view_type == 'following' %}
+                    <a href="{% url 'profile' user.user %}" class="profile-link principal-button">{{ user.user }}</a>
+                {% else %}
+                    <a href="{% url 'profile' user %}" class="profile-link principal-button">{{ user }}</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <!-- Si la lista está vacía, mostrar un mensaje -->
+            <li class="empty-list">
+                {% if view_type == 'following' %}
+                    No following
+                {% else %}
+                    No followers
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

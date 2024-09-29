@@ -159,3 +159,170 @@ body {
     background-color: var(--azul-oscuro); /* Cambia a azul oscuro al pasar el mouse */
 }
 
+/* Estilo para las acciones del post */
+.post-actions {
+    display: flex;  /* Usa flexbox para alinear elementos */
+    justify-content: space-between;  /* Espacio entre los elementos de izquierda y derecha */
+    align-items: center;  /* Centra verticalmente los elementos */
+    margin-top: 10px;  /* Margen superior para separar del contenido anterior */
+}
+
+/* Estilo para los botones a la izquierda */
+.left-actions {
+    display: flex;  /* Flexbox para alinear los botones de la izquierda */
+    align-items: center;  /* Centrado vertical */
+}
+
+/* Estilo para los botones de acción */
+.action-button {
+    padding: 6px 12px;  /* Espaciado alrededor del texto */
+    font-size: 0.9em;  /* Tamaño de fuente */
+    color: var(--blanco);  /* Color de texto blanco */
+    background-color: var(--azul-claro);  /* Fondo azul claro */
+    border: none;  /* Sin borde */
+    border-radius: 4px;  /* Bordes redondeados */
+    cursor: pointer;  /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s;  /* Transición suave para el color de fondo */
+}
+
+/* Efecto hover para los botones de acción */
+.action-button:hover {
+    background-color: var(--naranja);  /* Color de fondo al pasar el cursor */
+}
+
+/* Estilo para el contador de likes */
+.likes-count {
+    margin-left: 8px;  /* Espacio a la izquierda del contador */
+    font-size: 0.9em;  /* Tamaño de fuente */
+}
+
+/* Estilo para el botón de la derecha (Edit Post) */
+.right-actions {
+    margin-left: auto;  /* Empuja el botón de editar hacia la derecha */
+}
+
+
+.new-post-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--gris-claro);
+    border: 2px solid var(--azul-oscuro);
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.textarea-post {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--azul-claro);
+    border-radius: 5px;
+    background-color: var(--blanco);
+    font-size: 16px;
+    min-height: 100px;
+    margin-bottom: 10px;
+    color: black;
+}
+
+.textarea-post::placeholder {
+    color: var(--azul-claro);
+}
+
+.submit-button {
+    background-color: var(--azul-claro);
+    color: var(--blanco);
+    border: 2px solid var(--azul-oscuro);
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: var(--azul-oscuro);
+}
+
+.new-post-title{
+    border-radius: 8px;
+
+}
+
+.profile-list {
+    list-style-type: none;
+    padding: 0;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.profile-item {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.profile-link {
+    background-color: var(--azul-claro);
+    color: var(--blanco);
+    padding: 10px 20px;
+    text-decoration: none;
+    border: 2px solid var(--azul-oscuro);
+    border-radius: 5px;
+    font-size: 16px;
+    display: inline-block;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.profile-link:hover {
+    background-color: var(--azul-oscuro);
+    border: 2px solid var(--azul-claro);
+}
+
+.empty-list {
+    text-align: center;
+    font-size: 18px;
+    color: var(--blanco);
+}
+
+.post-link {
+    background-color: var(--azul-claro);
+    color: var(--blanco);
+    padding: 5px 10px;
+    margin: 5px 10px;
+    text-decoration: none;
+    border: 2px solid var(--azul-oscuro);
+    border-radius: 5px;
+    font-size: 16px;
+    display: inline-block;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.post-link:hover {
+    background-color: var(--azul-oscuro);
+    border: 2px solid var(--azul-claro);
+}
+
+#button-follow {
+    display: block;           /* Asegura que sea tratado como un elemento de bloque */
+    margin: 0 auto;           /* Margen superior e inferior a 0, auto centrará horizontalmente */
+    width: fit-content;       /* Ajusta el ancho al contenido del botón (opcional) */
+}
+#button-follow:hover {
+    border: 2px solid var(--azul-claro);
+}
+
+footer {
+    background-color: var(--azul-oscuro); /* Cambia al color que prefieras */
+    color: var(--blanco);
+    text-align: center;
+    padding: 10px 0; /* Ajusta el espacio según sea necesario */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content p {
+    margin: 0; /* Elimina el margen por defecto */
+}
+

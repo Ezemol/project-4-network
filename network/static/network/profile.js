@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (followDiv) {
             // Agrego boton de follow/unfollow
             followDiv.innerHTML = `
-            <button id="button-follow" class="btn-secondary btn">
+            <button id="button-follow" class="submit-button">
                 ${isFollowing ? "Unfollow" : "Follow"}  
             </button>`; // Cambia el texto del botón según el estado
 
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Actualiza el botón basado en la respuesta
             if (result.is_following !== undefined) {  // Verifica si el campo is_following está en la respuesta
                 isFollowing = result.is_following;  // Actualiza la variable isFollowing
-                document.querySelector('#button-follow').innerText = isFollowing ? "Unfollow" : "Follow";  // Cambia el texto del botón
+                document.querySelector('#button-follow').innerText =  isFollowing ? "Unfollow" : "Follow";  // Cambia el texto del botón
 
                 // Actualizar los followers del perfil sin recargar la página
                 const numFollowersElement = document.querySelector("#num_followers");
@@ -110,7 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Funcion para editar texto del post
     function editPost(postId) {
         const postBody = document.querySelector(`#post-body[data-post-id="${postId}"]`);
-        const originalText = postBody.textContent;
+        const originalText = postBody.textContent.trim();
+
+        // Verifica si ya existe un textarea para evitar duplicados
+        if (postBody.querySelector('textarea')) {
+            return; // Si ya está en modo edición, no hace nada.
+        }
 
         postBody.innerHTML = `
             <textarea id="textarea-${postId}">${originalText}</textarea>

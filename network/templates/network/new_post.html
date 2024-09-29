@@ -2,13 +2,17 @@
 
 {% block body %}
     {% if message %}
-        {{ message }}
+        <div class="message">
+            {{ message }}
+        </div>
     {% endif %}
 
-    <form action="{% url 'new_post' %}" method="post">
+    <form action="{% url 'new_post' %}" method="post" class="new-post-form">
         {% csrf_token %}
-        <h2 class="principal-title">New Post</h2>
-        <input type="textarea" id="post_made" name="post_made" placeholder="Make a post">
-        <button type="submit">Post</button>
+        <h2 class="principal-title new-post-title">New Post</h2>
+
+        <textarea id="post_made" name="post_made" class="textarea-post" placeholder="What's on your mind?"></textarea>
+
+        <button type="submit" class="submit-button">Post</button>
     </form>
 {% endblock %}

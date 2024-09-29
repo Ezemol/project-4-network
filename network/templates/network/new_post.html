@@ -7,7 +7,7 @@
 
     <form action="{% url 'new_post' %}" method="post">
         {% csrf_token %}
-        <h3>New Post</h3>
+        <h2 class="principal-title">New Post</h2>
         <input type="textarea" id="post_made" name="post_made" placeholder="Make a post">
         <button type="submit">Post</button>
     </form>

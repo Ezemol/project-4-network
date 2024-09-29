@@ -1,0 +1,161 @@
+:root {
+    /* Colores recomendados */
+
+    /* Azul oscuro: para los encabezados y títulos importantes */
+    --azul-oscuro: #1E3A8A;
+
+    /* Azul claro: para botones y elementos interactivos */
+    --azul-claro: #3B82F6;
+
+    /* Blanco: para el fondo o áreas que requieren limpieza visual */
+    --blanco: #FFFFFF;
+
+    /* Gris claro: para fondos secundarios o secciones menos destacadas */
+    --gris-claro: #F3F4F6;
+
+    /* Naranja: para resaltar elementos clave como botones de llamada a la acción */
+    --naranja: #F97316;
+
+    /* Verde: para mensajes de éxito o elementos positivos */
+    --verde: #10B981;
+}
+
+/* Titulo Pincipal */
+.principal-title {
+    color: var(--gris-claro);       /* Color del texto en azul oscuro */
+    background-color: var(--azul-oscuro); /* Fondo blanco */
+    padding: 10px 20px;              /* Espaciado alrededor del título */
+    text-align: center;              /* Centrar el texto */
+    font-size: 2.5em;                /* Tamaño de letra grande */
+    font-weight: bold;               /* Negrita para destacar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidad */
+    border: 2px solid var(--azul-claro); /* Borde en azul claro para resaltar */
+    margin-bottom: 20px;             /* Espacio debajo del título */
+}
+
+/* Estilo del contenedor de los botones */
+.layout-buttons {
+    display: flex;
+    justify-content: space-between;  /* Distribuye los botones en horizontal */
+    align-items: center;
+    background-color: var(--azul-oscuro); /* Fondo de la barra de navegación */
+    padding: 10px;
+}
+
+/* Estilo general de los botones */
+.principal-button, .nav-link {
+    color: var(--blanco);             /* Color del texto */
+    background-color: var(--azul-claro);  /* Fondo azul claro */
+    padding: 10px 15px;               /* Espaciado interno de los botones */
+    text-decoration: none;            /* Elimina el subrayado en los enlaces */
+    border-radius: 8px;               /* Bordes redondeados */
+    font-weight: bold;                /* Texto en negrita */
+    transition: background-color 0.3s ease, border 0.3s ease; /* Transición para hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    border: 2px solid transparent;    /* Borde invisible por defecto */
+}
+
+
+/* Hover para cambiar el color y agregar un borde azul claro */
+.principal-button:hover, .nav-link:hover {
+    background-color: var(--azul-oscuro);  /* Cambia a azul oscuro en hover */
+    color: var(--blanco);               /* Color del texto permanece blanco */
+    border: 2px solid var(--azul-claro); /* Borde azul claro al hacer hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+}
+
+/* Lista de elementos dentro del contenedor */
+.ul-button {
+    list-style: none;                  /* Sin viñetas */
+    display: flex;                     /* Botones en fila */
+    gap: 10px;                         /* Espacio entre los botones */
+    margin: 0;
+}
+
+/* Estilo de los botones de paginación */
+.pagination a {
+    padding: 5px 10px; /* Espacio alrededor del texto */
+    background-color: var(--azul-claro); /* Color de fondo */
+    color: var(--blanco); /* Color de texto */
+    border-radius: 5px; /* Bordes redondeados */
+    margin: 0 5px; /* Espacio entre los botones de paginación */
+    text-decoration: none; /* Sin subrayado */
+}
+
+.pagination a:hover {
+    background-color: var(--naranja); /* Color de fondo al pasar el cursor */
+}
+
+/* Cada ítem de la lista de botones */
+.layout-item-button {
+    display: inline-block;             /* Mantener botones en línea */
+}
+
+/* Personalización de botones principales */
+.principal-button {
+    font-size: 1.2em;                  /* Tamaño de letra un poco mayor */
+    background-color: var(--azul-claro);  /* Fondo azul claro para el botón principal */
+}
+
+/* Ajuste de padding para un diseño más compacto */
+.layout-item-button .nav-link {
+    padding: 8px 12px;
+}
+
+body {
+    background-color: var(--azul-oscuro); /* Fondo azul oscuro para la página */
+    color: var(--blanco); /* Color del texto en blanco */
+}
+
+.page-div {
+    max-width: 800px; /* Limita el ancho máximo */
+    margin: 0 auto; /* Centra el div */
+    padding: 20px; /* Espacio interno */
+}
+
+.post-p {
+    background-color: var(--blanco); /* Fondo blanco para el post */
+    border: 1px solid var(--gris-claro); /* Borde gris claro alrededor del post */
+    border-radius: 5px; /* Bordes redondeados para suavizar el aspecto */
+    padding: 10px; /* Espacio interno para el post */
+}
+
+.mini-title {
+    display: flex; /* Usa flexbox para alinear los elementos */
+    justify-content: space-between; /* Espacia el nombre del usuario y el timestamp */
+    align-items: center; /* Alinea verticalmente los elementos */
+}
+
+.timestamp {
+    margin-left: auto; /* Empuja el timestamp hacia la derecha */
+    font-size: 0.9em; /* Ajusta el tamaño de la fuente si es necesario */
+    color: var(--gris-claro); /* Cambia el color del timestamp si lo deseas */
+}
+
+.post-body {
+    margin-top: 10px; /* Espacio encima del contenido del post */
+}
+
+/* Botones following y followers */
+.follow-buttons {
+    display: flex; /* Usa flexbox para alinear los elementos en línea */
+    gap: 100px; /* Aumenta el espacio entre los botones a 20px */
+    justify-content: center; /* Centra los botones dentro del contenedor */
+    margin-bottom: 15px; /* Espacio debajo del contenedor de botones */
+}
+
+
+.link-follow-button {
+    display: inline-block; /* Asegura que el enlace se comporte como un botón */
+    padding: 10px 20px; /* Espacio interno para el botón */
+    background-color: var(--azul-claro); /* Fondo azul claro */
+    color: var(--blanco); /* Texto en blanco */
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Sin subrayado */
+    transition: background-color 0.3s ease, margin 0.3s ease; /* Transición suave para el hover */
+}
+
+.link-follow-button:hover {
+    background-color: var(--azul-oscuro); /* Cambia a azul oscuro al pasar el mouse */
+}
+

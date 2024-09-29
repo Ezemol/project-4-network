@@ -3,47 +3,49 @@
 
 {% block body %}
     <div id="profile-view" data-is-following="{{ is_following|yesno:'true,false' }}" data-user-id="{{ profile.user.id }}">
-        <h1>{{ profile.user }}</h1>  <!-- Muestra el nombre del usuario del perfil -->
+        <h1 class="principal-title">{{ profile.user }}</h1>  <!-- Muestra el nombre del usuario del perfil -->
 
         {% if active_posts %}  <!-- Verifica si hay publicaciones -->
-        <div>
-            <p><a href="{% url 'profile_connections' profile.user.id %}?view=followers">
-                Followers: <span id="num_followers">{{ num_followers }}</span>
-            </a></p>  <!-- Muestra la cantidad de seguidores -->
-
-            <p><a href="{% url 'profile_connections' profile.user.id %}?view=following">
-                Following: {{ num_following }}
-            </a></p>  <!-- Muestra la cantidad de personas que sigue -->
+        <div class="page-div">
+            <div class="follow-buttons"> <!-- Nuevo contenedor para alinear los botones -->
+                <a href="{% url 'profile_connections' profile.user.id %}?view=followers" class="link-follow-button principal-button">
+                    Followers: <span id="num_followers">{{ num_followers }}</span>
+                </a>
+                
+                <a href="{% url 'profile_connections' profile.user.id %}?view=following" class="link-follow-button principal-button">
+                    Following: {{ num_following }}
+                </a>
+            </div>
 
             {% for post in active_posts %}  <!-- Itera sobre todas las publicaciones -->
-                <p>
+                <p class="post-p">
+                    <p class="mini-title">
+                        Post made by: {{ post.user }}
+                        <span class="timestamp">{{ post.timestamp }}</span>  <!-- Muestra la fecha y hora de la publicación -->
+                    </p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
                     <hr>
-                    {{ post.timestamp }}  <!-- Muestra la fecha y hora de la publicación -->
-                    <hr>
-                    <p>Post made by: {{ post.user }}</p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
-                    <p id="post-body" data-post-id="{{post.id}}">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
-                    <div>
-                        <p>{{ post.body }}</p>
+                    <p id="post-body" class="post-body" data-post-id="{{post.id}}">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
+                    <div class="post-actions">
                         {% if request.user.is_authenticated %}
-                            <button id="like-post-button-{{ post.id }}">
+                            <button class="action-button" id="like-post-button-{{ post.id }}">
                                 {% if post.is_liked %}
                                     Unlike
                                 {% else %}
                                     Like
                                 {% endif %}
                             </button>
+                            <button class="action-button" id="edit-post-button-{{ post.id }}">
+                                Edit Post
+                            </button>
                         {% endif %}
-                        {% if post.likes.count == 1 %}
-                            <span id="likes-count-{{post.id}}">{{ post.likes.count }} Like</span>
-                        {% else %}
-                            <span id="likes-count-{{post.id}}">{{ post.likes.count }} Likes</span>
-                        {% endif %}
+                        <span class="likes-count" id="likes-count-{{post.id}}">
+                            {% if post.likes.count == 1 %}
+                                {{ post.likes.count }} Like
+                            {% else %}
+                                {{ post.likes.count }} Likes
+                            {% endif %}
+                        </span>
                     </div>
-                    <div>
-                        {% if post.user == request.user %}
-                            <button id="edit-post-button-{{post.id}}">Edit Post</button>
-                        {% endif %}
-                    </div>    
                 </p>
             {% endfor %}
         </div> 

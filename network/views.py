@@ -18,9 +18,10 @@ def index(request):
     # Variable con las páginas y sus posts respectivos
     pagin = paginator(request, active_posts)
 
-    # Ver si ya likeó o no el post
+    # Verificar si ya likeó o no el post
     for post in active_posts:
         post.is_liked = post.likes.filter(id=request.user.id).exists()
+        post.save()
 
     # Renderizar la vista del índice con los posts activos
     return render(request, "network/index.html", {
@@ -114,7 +115,7 @@ def profile(request, username):
     # Variable con las páginas y sus posts respectivos
     pagin = paginator(request, active_posts)
 
-    # Verificar los likes de cada post
+    # Verificar si ya likeó o no el post
     for post in active_posts:
         post.is_liked = post.likes.filter(id=request.user.id).exists()
         post.save()
@@ -190,9 +191,10 @@ def following_posts(request):
         # Filtrar los posts activos hechos por esos usuarios.
         active_posts = Post.objects.filter(is_active=True, user__in=following_users).order_by("-timestamp")
 
-        # Ver si ya likeó o no el post
+        # Verificar si ya likeó o no el post
         for post in active_posts:
-            post.is_liked = post.likes.filter(user_id=request.user.id).exists()
+            post.is_liked = post.likes.filter(id=request.user.id).exists()
+            post.save()
 
         # Variable con las páginas y sus posts respectivos
         pagin = paginator(request, active_posts)

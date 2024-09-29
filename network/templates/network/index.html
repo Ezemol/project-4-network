@@ -4,23 +4,23 @@
 {% block title %}{{ title_page }}{% endblock %}
 
 {% block body %}
-    <h1>{{ title_page }}</h1>
+    <h1 class="principal-title">{{ title_page }}</h1>
     {% if message %}
         {{ message }}
     {% endif %}
     {% if active_posts %}
-        <div>
+        <div class="page-div">
             {% for post in active_posts %}
-                <p>
-                    <hr>
-                    {{ post.timestamp }}
-                    <hr>
-                    <p>Post made by: <a href="{% url 'profile' post.user  %}">{{ post.user }}</a></p>
-                    <p id="post-body" data-post-id="{{post.id}}">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
+            <p class="post-p">
+                <p class="mini-title">
+                    Post made by: {{ post.user }}
+                    <span class="timestamp">{{ post.timestamp }}</span>  <!-- Muestra la fecha y hora de la publicación -->
+                </p>  <!-- Muestra el nombre del usuario que hizo la publicación -->
+                <hr>
+                    <p id="post-body" data-post-id="{{post.id}}" class="post-body">{{ post.body }}</p>  <!-- Muestra el contenido de la publicación -->
                     <div>
-                        <p>{{ post.body }}</p>
                         {% if request.user.is_authenticated %}
-                            <button id="like-post-button-{{ post.id }}">
+                            <button class="change-button" id="like-post-button-{{ post.id }}">
                                 {% if post.is_liked %}
                                     Unlike
                                 {% else %}
@@ -29,14 +29,14 @@
                             </button>
                         {% endif %}
                         {% if post.likes.count == 1 %}
-                            <span id="likes-count-{{post.id}}">{{ post.likes.count }} Like</span>
+                            <span class="likes-count" id="likes-count-{{post.id}}">{{ post.likes.count }} Like</span>
                         {% else %}
-                            <span id="likes-count-{{post.id}}">{{ post.likes.count }} Likes</span>
+                            <span class="likes-count" id="likes-count-{{post.id}}">{{ post.likes.count }} Likes</span>
                         {% endif %}
                     </div>
                     <div>
                         {% if post.user == request.user %}
-                            <button id="edit-post-button-{{post.id}}">Edit Post</button>
+                            <button class="change-button" id="edit-post-button-{{post.id}}">Edit Post</button>
                         {% endif %}
                     </div>                    
                 </p>

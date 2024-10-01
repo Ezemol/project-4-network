@@ -288,7 +288,7 @@ def like_post(request, post_id):
 
             post.save()
             
-            return JsonResponse({"success": True, "isLiked": is_liked})
+            return JsonResponse({"success": True, "isLiked": is_liked}, status=200)
         
         except Post.DoesNotExist:
             return JsonResponse({"error": "Post not found."}, status=404)
